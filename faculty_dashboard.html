@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Faculty Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard_base.css') }}">
+</head>
+<body>
+<div class="dashboard-container">
+  <aside class="sidebar">
+    <div>
+      <div class="logo">
+        <div class="logo-icon">👩‍🏫</div>
+        <div><div class="logo-text">Faculty Panel</div><div class="logo-sub">Attendance System</div></div>
+      </div>
+      <ul class="menu">
+        <li class="active" onclick="showSection('overview')"><span class="menu-icon">🏠</span>Dashboard</li>
+        <li onclick="showSection('markAttendance')"><span class="menu-icon">✅</span>Mark Attendance</li>
+        <li onclick="showSection('viewReports')"><span class="menu-icon">📊</span>Reports</li>
+        <li onclick="showSection('students')"><span class="menu-icon">🎓</span>My Students</li>
+        <li onclick="showSection('uploadFiles')"><span class="menu-icon">📁</span>Upload Files</li>
+        <li onclick="showSection('notices')"><span class="menu-icon">📢</span>Notices</li>
+        <li onclick="showSection('profile')"><span class="menu-icon">👤</span>Profile</li>
+      </ul>
+    </div>
+    <button class="logout-btn" onclick="window.location='/logout'">🚪 Logout</button>
+  </aside>
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left"><h2 id="page-title">Dashboard Overview</h2><p id="faculty-sub">Loading...</p></div>
+      <div class="user-info"><div class="user-avatar">👩‍🏫</div><div class="user-details"><div class="user-name" id="topbar-name">Faculty</div><div class="user-role">Faculty</div></div></div>
+    </header>
+    <div class="page-content">
+
+      <!-- OVERVIEW -->
+      <section id="overview" class="content-section active">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-label">Classes Today</div><div class="stat-value">3</div><div class="stat-icon">🏫</div></div>
+          <div class="stat-card"><div class="stat-label">My Students</div><div class="stat-value" id="students-count">–</div><div class="stat-icon">🎓</div></div>
+          <div class="stat-card"><div class="stat-label">Dept</div><div class="stat-value" id="dept-val" style="font-size:1.1rem;padding-top:8px">–</div><div class="stat-icon">🏛️</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:12px;">
+          <div class="table-wrap">
+            <div class="table-header"><h3>📅 Today's Schedule</h3></div>
+            <div id="schedule-list" style="padding:0 4px;"></div>
+          </div>
+          <div class="table-wrap">
+            <div class="table-header"><h3>📢 Latest Notices</h3></div>
+            <div id="overview-notices" style="padding:0 4px;"><div class="loading"><span class="spinner"></span></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- MARK ATTENDANCE -->
+      <section id="markAttendance" class="content-section">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div class="section-title"><span>✅</span>Mark Attendance</div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <input type="date" id="att-date" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text);font-family:'Sora',sans-serif;font-size:.82rem;outline:none;">
+            <select id="att-subject" style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text);font-family:'Sora',sans-serif;font-size:.82rem;outline:none;">
+              <option>Machine Learning</option><option>Statistics</option><option>Data Mining</option><option>Deep Learning</option><option>NLP</option><option>Algorithms</option>
+            </select>
+            <button class="btn" style="background:var(--surface2)" onclick="loadAttList()">🔄 Load</button>
+            <button class="btn btn-primary" onclick="saveAttendance()">💾 Save</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
+          <button class="btn btn-success btn-sm" onclick="markAll('Present')">✅ All Present</button>
+          <button class="btn btn-danger btn-sm" onclick="markAll('Absent')">❌ All Absent</button>
+        </div>
+        <div id="att-list-wrap"><div class="loading"><span class="spinner"></span>Click Load to fetch students</div></div>
+        <div id="save-msg" style="margin-top:12px;display:none"></div>
+      </section>
+
+      <!-- REPORTS -->
+      <section id="viewReports" class="content-section">
+        <div class="section-title"><span>📊</span>Attendance Reports</div>
+        <div id="reports-content"><div class="loading"><span class="spinner"></span>Loading...</div></div>
+      </section>
+
+      <!-- STUDENTS -->
+      <section id="students" class="content-section">
+        <div class="section-title"><span>🎓</span>All Students</div>
+        <div id="students-table-wrap"><div class="loading"><span class="spinner"></span>Loading...</div></div>
+      </section>
+
+      <!-- UPLOAD FILES -->
+      <section id="uploadFiles" class="content-section">
+        <div class="section-title"><span>📁</span>Upload Files</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+          <div class="table-wrap" style="padding:24px;">
+            <h3 style="margin-bottom:16px;">Upload New File</h3>
+            <div class="form-group"><label>Select File</label>
+              <input type="file" id="file-input" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.txt,.csv" style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-family:'Sora',sans-serif;font-size:.85rem;width:100%;outline:none;">
+            </div>
+            <div class="form-group"><label>Description (optional)</label><input id="file-desc" placeholder="e.g. Week 5 lecture notes"></div>
+            <div id="upload-msg" style="font-size:.82rem;margin-bottom:10px;min-height:18px;"></div>
+            <button class="btn btn-primary" onclick="uploadFile()">⬆ Upload File</button>
+          </div>
+          <div class="table-wrap">
+            <div class="table-header"><h3>My Uploaded Files</h3></div>
+            <div id="my-files"><div class="loading"><span class="spinner"></span>Loading...</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- NOTICES -->
+      <section id="notices" class="content-section">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div class="section-title"><span>📢</span>Notices</div>
+          <button class="btn btn-primary" onclick="openNoticeModal()">+ Post Notice</button>
+        </div>
+        <div id="notices-list"><div class="loading"><span class="spinner"></span>Loading...</div></div>
+      </section>
+
+      <!-- PROFILE -->
+      <section id="profile" class="content-section">
+        <div class="section-title"><span>👤</span>My Profile</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+          <div id="profile-content"><div class="loading"><span class="spinner"></span>Loading...</div></div>
+          <div class="table-wrap" style="padding:24px;">
+            <h3 style="margin-bottom:16px;">Change Password</h3>
+            <div class="form-group"><label>Current Password</label><input type="password" id="cur-pass" placeholder="••••••"></div>
+            <div class="form-group"><label>New Password</label><input type="password" id="new-pass" placeholder="••••••"></div>
+            <div class="form-group"><label>Confirm</label><input type="password" id="conf-pass" placeholder="••••••"></div>
+            <div id="pass-msg" style="font-size:.82rem;margin-bottom:10px;min-height:18px;"></div>
+            <button class="btn btn-primary" onclick="changePassword()">Update Password</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- Notice Modal -->
+<div class="modal-overlay" id="notice-modal">
+  <div class="modal">
+    <h3>📢 Post a Notice</h3>
+    <div class="form-group"><label>Title *</label><input id="n-title" placeholder="Notice title"></div>
+    <div class="form-group"><label>Body *</label><textarea id="n-body" placeholder="Notice content..." style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'Sora',sans-serif;font-size:.88rem;outline:none;resize:vertical;min-height:100px;"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-danger" onclick="document.getElementById('notice-modal').classList.remove('active')">Cancel</button>
+      <button class="btn btn-primary" onclick="postNotice()">Post</button>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='faculty/faculty_script.js') }}"></script>
+</body></html>
