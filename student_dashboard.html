@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard_base.css') }}">
+</head>
+<body>
+<div class="dashboard-container">
+  <aside class="sidebar">
+    <div>
+      <div class="logo">
+        <div class="logo-icon">🎓</div>
+        <div><div class="logo-text">Student Panel</div><div class="logo-sub">Attendance System</div></div>
+      </div>
+      <ul class="menu">
+        <li class="active" onclick="showSection('overview')"><span class="menu-icon">🏠</span>Dashboard</li>
+        <li onclick="showSection('attendance')"><span class="menu-icon">📅</span>My Attendance</li>
+        <li onclick="showSection('assignments')"><span class="menu-icon">📝</span>Assignments</li>
+        <li onclick="showSection('timetable')"><span class="menu-icon">🗓️</span>Timetable</li>
+        <li onclick="showSection('profile')"><span class="menu-icon">👤</span>Profile</li>
+      </ul>
+    </div>
+    <button class="logout-btn" onclick="window.location='/logout'">🚪 Logout</button>
+  </aside>
+  <main class="main-content">
+    <header class="topbar">
+      <div class="topbar-left"><h2 id="page-title">Dashboard Overview</h2><p id="student-name-display">Loading...</p></div>
+      <div class="user-info"><div class="user-avatar">🎓</div><div class="user-details"><div class="user-name" id="topbar-name">Student</div><div class="user-role">Student</div></div></div>
+    </header>
+    <div class="page-content">
+
+      <!-- OVERVIEW -->
+      <section id="overview" class="content-section active">
+        <div class="stats-grid" id="overview-stats"><div class="loading"><span class="spinner"></span>Loading...</div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:8px;">
+          <div class="table-wrap">
+            <div class="table-header"><h3>📅 Recent Attendance</h3></div>
+            <div id="recent-attendance-overview" style="padding:0 4px;"><div class="loading"><span class="spinner"></span>Loading...</div></div>
+          </div>
+          <div class="table-wrap">
+            <div class="table-header"><h3>📝 Pending Assignments</h3></div>
+            <div id="pending-assignments"><div class="loading"><span class="spinner"></span>Loading...</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ATTENDANCE -->
+      <section id="attendance" class="content-section">
+        <div class="section-title"><span>📅</span>My Attendance Record</div>
+        <div id="attendance-detail"><div class="loading"><span class="spinner"></span>Loading...</div></div>
+      </section>
+
+      <!-- ASSIGNMENTS -->
+      <section id="assignments" class="content-section">
+        <div class="section-title"><span>📝</span>My Assignments</div>
+        <div id="assignments-list"><div class="loading"><span class="spinner"></span>Loading...</div></div>
+      </section>
+
+      <!-- TIMETABLE -->
+      <section id="timetable" class="content-section">
+        <div class="section-title"><span>🗓️</span>Weekly Timetable</div>
+        <div id="timetable-grid"><div class="loading"><span class="spinner"></span>Loading...</div></div>
+      </section>
+
+      <!-- PROFILE -->
+      <section id="profile" class="content-section">
+        <div class="section-title"><span>👤</span>My Profile</div>
+        <div id="profile-content"><div class="loading"><span class="spinner"></span>Loading...</div></div>
+      </section>
+
+    </div>
+  </main>
+</div>
+<script src="{{ url_for('static', filename='student/student_script.js') }}"></script>
+</body></html>

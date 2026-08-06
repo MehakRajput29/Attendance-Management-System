@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Attendance Management Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="bg-orbs">
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+  </div>
+
+  <div class="container">
+    <div class="hero">
+      <div class="badge">🎓 Smart Attendance System</div>
+      <h1 class="title">Attendance<br><span>Management</span><br>Portal</h1>
+      <p class="subtitle">Select your role to access your dashboard</p>
+    </div>
+
+    <div class="role-container">
+      <div class="role-card" onclick="showLogin('admin')">
+        <div class="card-icon">🛡️</div>
+        <h2>Admin</h2>
+        <p>Manage students, faculty & system</p>
+        <div class="card-arrow">→</div>
+      </div>
+      <div class="role-card" onclick="showLogin('faculty')">
+        <div class="card-icon">👩‍🏫</div>
+        <h2>Faculty</h2>
+        <p>Mark attendance & view reports</p>
+        <div class="card-arrow">→</div>
+      </div>
+      <div class="role-card" onclick="showLogin('student')">
+        <div class="card-icon">🎓</div>
+        <h2>Student</h2>
+        <p>Track your attendance & assignments</p>
+        <div class="card-arrow">→</div>
+      </div>
+    </div>
+
+    <div class="hint-box">
+      <span class="hint-label">Demo Credentials</span>
+      <span>Admin: admin / admin123</span>
+      <span class="sep">·</span>
+      <span>Faculty: faculty / faculty123</span>
+      <span class="sep">·</span>
+      <span>Student: student / student123</span>
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay" onclick="closeLogin()"></div>
+
+  <!-- Login Modals -->
+  <div class="login-box" id="admin-login">
+    <span class="close" onclick="closeLogin()">✕</span>
+    <div class="login-icon">🛡️</div>
+    <h2>Admin Login</h2>
+    <p class="login-sub">Enter your credentials to continue</p>
+    <input type="text" id="admin-username" placeholder="Username" autocomplete="off">
+    <input type="password" id="admin-password" placeholder="Password">
+    <div class="error-msg" id="admin-error"></div>
+    <button onclick="login('admin')">Sign In</button>
+  </div>
+
+  <div class="login-box" id="faculty-login">
+    <span class="close" onclick="closeLogin()">✕</span>
+    <div class="login-icon">👩‍🏫</div>
+    <h2>Faculty Login</h2>
+    <p class="login-sub">Enter your credentials to continue</p>
+    <input type="text" id="faculty-username" placeholder="Username" autocomplete="off">
+    <input type="password" id="faculty-password" placeholder="Password">
+    <div class="error-msg" id="faculty-error"></div>
+    <button onclick="login('faculty')">Sign In</button>
+  </div>
+
+  <div class="login-box" id="student-login">
+    <span class="close" onclick="closeLogin()">✕</span>
+    <div class="login-icon">🎓</div>
+    <h2>Student Login</h2>
+    <p class="login-sub">Enter your credentials to continue</p>
+    <input type="text" id="student-username" placeholder="Username" autocomplete="off">
+    <input type="password" id="student-password" placeholder="Password">
+    <div class="error-msg" id="student-error"></div>
+    <button onclick="login('student')">Sign In</button>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
